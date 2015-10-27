@@ -1,29 +1,35 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import models.Anunciante;
 import models.Anuncio;
+import models.dao.GenericDAO;
 import play.*;
 import play.data.Form;
+import play.db.jpa.Transactional;
 import play.mvc.*;
 import views.html.*;
 
 public class Application extends Controller {
 	
-	Anuncio anuncio;
-	Anunciante anunciante;
+	private static final GenericDAO dao = new GenericDAO();
+	private Anuncio anuncioCriado;
+	private Anunciante anunciante;
 	
+	@Transactional
     public Result index() {
-        return ok(index.render());
+        return ok(index.render(dao.findAllByClass(Anuncio.class)));
     }
     
     public Result anuncie() {
     	return ok(anuncie.render());
     }
     
+    @Transactional
     public Result anunciar() {
         Map<String, String> mapDados = Form.form().bindFromRequest().data();
         Boolean procuraBanda;
@@ -49,10 +55,18 @@ public class Application extends Controller {
         String gosta = mapDados.get("gosta");
         String naoGosta = mapDados.get("naoGosta");
         
-        anunciante = new Anunciante(cidade, bairro, instrumentos, gosta, naoGosta, 
+        try {
+        	anunciante = new Anunciante(cidade, bairro, instrumentos, gosta, naoGosta, 
         		procuraBanda, facebook, email);
-        anuncio = new Anuncio(titulo, descricao, anunciante);
-        return ok(anuncios.render(titulo));
+        	dao.persist(anunciante);
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+        
+        anuncioCriado = new Anuncio(titulo, descricao, anunciante);
+        dao.persist(anuncioCriado);
+        dao.flush();
+        return ok(index.render(dao.findAllByClass(Anuncio.class)));
     }
 
 }

@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -8,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Created by Andre on 01/06/2015.
@@ -27,11 +31,14 @@ public class Anuncio {
 	
 	@ManyToOne
     private Anunciante anunciante;
+	
+	@Temporal(value = TemporalType.TIMESTAMP)
+	private Calendar date = Calendar.getInstance();
     
     public Anuncio() { }
-    
+
     public Anuncio(String titulo, String descricao, Anunciante anunciante) {
-        this.setTitulo(titulo);
+		this.setTitulo(titulo);
         this.setDescricao(descricao);
         this.setAnunciante(anunciante);
     }
@@ -66,6 +73,14 @@ public class Anuncio {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public Calendar getDate() {
+		return date;
+	}
+
+	public void setDate(Calendar date) {
+		this.date = date;
 	}
 
 

@@ -50,13 +50,21 @@ public class Anunciante {
 		this.gosta = gosta;
 		this.naoGosta = naoGosta;
 		this.procuraBanda = procuraBanda;
-		this.facebook = facebook;
-		this.email = email;
+		
+		if (isContatoEmpty(facebook)) {
+			setFacebook("Nao informado");
+		} else if (isContatoEmpty(email)){
+			setEmail("Nao informado");
+		} else {
+			this.email = email;
+			this.facebook = facebook;
+		}
+		
 	}
 
 	private boolean isContatoEmpty(String contato) {
 		if (contato == null || contato.equals("")) return true;
-		else return false;
+		return false;
 	}
 
 	public String getCidade() {

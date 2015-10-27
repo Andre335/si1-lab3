@@ -1,3 +1,4 @@
+@(anuncios : List[Anuncio])
 <!DOCTYPE html>
 <html>
     
@@ -38,7 +39,7 @@
                             <a href="@routes.Application.index()">Home</a>
                         </li>
                         <li>
-                            <a href="#">Anuncios</a>
+                            <a href="#table_content">Anuncios</a>
                         </li>
                     </ul>
                 </div>
@@ -60,6 +61,40 @@
                 </div>
             </div>
         </div>
+        <div class="bs-example" data-exaple-id="table-within-panel">
+	        @if(anuncios.size() > 0){
+		        <div id="table_content" class="panel panel-default">
+		        	<table class="table">
+		        		<thead>
+		        			<tr>
+		        				<th> Titulo </th>
+		        				<th> Cidade </th>
+		        				<th> Bairro </th>
+		        				<th> Email </th>
+		        				<th> Facebook </th>
+		        				<th> Procura Banda? </th>
+		        			</tr>
+		        		</thead>
+		        		<tbody>
+		        			@for(anuncio <- anuncios){
+		        				<tr>  
+		        					<td>@anuncio.getTitulo()</td>
+		        					<td>@anuncio.getAnunciante().getCidade()</td>
+		        					<td>@anuncio.getAnunciante().getBairro()</td>
+		        					<td>@anuncio.getAnunciante().getEmail()</td>
+		        					<td>@anuncio.getAnunciante().getFacebook()</td>
+		        					@if(anuncio.getAnunciante().isProcuraBanda()){
+		        						<td>Sim</td>
+		        					}else{
+		        						<td>Não</td>
+		        					}
+		        				</tr>
+		        			}
+		        		</tbody>
+		        	</table>
+		        </div>
+		    }
+		</div>
         <div class="section" id="about">
             <div class="container">
                 <div class="row">
