@@ -1,9 +1,16 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity(name="Anunciante")
 public class Anunciante {
@@ -12,22 +19,22 @@ public class Anunciante {
 	@GeneratedValue
 	private long id;
 	
-	@Column
+	@Column(nullable = false)
 	private String cidade;
 	
-	@Column
+	@Column(nullable = false)
 	private String bairro;
 	
-	@Column
+	@Column(nullable = false)
 	private String instrumentos;
 	
-	@Column
-	private String gosta;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Estilo> gosta;
 	
-	@Column
-	private String naoGosta;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Estilo> naoGosta;
 	
-	@Column
+	@Column(nullable = false)
 	private boolean procuraBanda;
 	
 	@Column
@@ -36,10 +43,13 @@ public class Anunciante {
 	@Column
 	private String email;
 	
-	public Anunciante () { }
+	public Anunciante () { 
+		this.gosta = new ArrayList<Estilo>();
+		this.gosta = new ArrayList<Estilo>();
+	}
 	
-	public Anunciante(String cidade, String bairro, String instrumentos, String gosta,
-			String naoGosta, boolean procuraBanda, String facebook, String email) throws Exception {
+	public Anunciante(String cidade, String bairro, String instrumentos, List<Estilo> gosta,
+			List<Estilo> naoGosta, boolean procuraBanda, String facebook, String email) throws Exception {
 		
 		if (isContatoEmpty(facebook) && isContatoEmpty(email)) 
 			throw new Exception ("Informe ao menos uma forma de contato!");
@@ -47,14 +57,28 @@ public class Anunciante {
 		this.cidade = cidade;
 		this.bairro = bairro;
 		this.instrumentos = instrumentos;
-		this.gosta = gosta;
-		this.naoGosta = naoGosta;
 		this.procuraBanda = procuraBanda;
+		
+		this.gosta = gosta.isEmpty() ? new ArrayList<>() : gosta;
+//		if (gosta.isEmpty()) {
+//			this.gosta = new ArrayList<>();
+//		} else {
+//			this.gosta = gosta;
+//		}
+		
+		this.naoGosta = naoGosta.isEmpty() ? new ArrayList<>() : naoGosta;
+//		if (naoGosta.isEmpty()) {
+//			this.naoGosta = new ArrayList<>();
+//		} else {
+//			this.naoGosta = naoGosta;
+//		}
 		
 		if (isContatoEmpty(facebook)) {
 			setFacebook("Nao informado");
+			this.email = email;
 		} else if (isContatoEmpty(email)){
 			setEmail("Nao informado");
+			this.facebook = facebook;
 		} else {
 			this.email = email;
 			this.facebook = facebook;
@@ -63,7 +87,7 @@ public class Anunciante {
 	}
 
 	private boolean isContatoEmpty(String contato) {
-		if (contato == null || contato.equals("")) return true;
+		if (contato == null || contato.trim().equals("")) return true;
 		return false;
 	}
 
@@ -91,19 +115,19 @@ public class Anunciante {
 		this.instrumentos = instrumentos;
 	}
 
-	public String getGosta() {
+	public List<Estilo> getGosta() {
 		return gosta;
 	}
 
-	public void setGosta(String gosta) {
+	public void setGosta(List<Estilo> gosta) {
 		this.gosta = gosta;
 	}
 
-	public String getNaoGosta() {
+	public List<Estilo> getNaoGosta() {
 		return naoGosta;
 	}
 
-	public void setNaoGosta(String naoGosta) {
+	public void setNaoGosta(List<Estilo> naoGosta) {
 		this.naoGosta = naoGosta;
 	}
 
@@ -139,5 +163,20 @@ public class Anunciante {
 		this.id = id;
 	}
 	
+	public String getGostaString() {
+		String gostaS = "";
+		for (Estilo estilo : this.gosta) {
+			gostaS += estilo.getNome() + ", ";
+		}
+		return gostaS;
+	}
+	
+	public String getNaoGostaString() {
+		String naoGostaS = "";
+		for (Estilo estilo : this.gosta) {
+			naoGostaS += estilo.getNome() + ", ";
+		}
+		return naoGostaS;
+	}
 	
 }

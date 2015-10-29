@@ -7,6 +7,7 @@ import java.util.Map;
 
 import models.Anunciante;
 import models.Anuncio;
+import models.Estilo;
 import models.dao.GenericDAO;
 import play.*;
 import play.data.Form;
@@ -26,7 +27,7 @@ public class Application extends Controller {
     }
     
     public Result anuncie() {
-    	return ok(anuncie.render());
+    	return ok(anuncie.render(null));
     }
     
     @Transactional
@@ -52,15 +53,28 @@ public class Application extends Controller {
 
         // instrumentos e estilos
         String instrumentos = mapDados.get("instrumentos");
-        String gosta = mapDados.get("gosta");
-        String naoGosta = mapDados.get("naoGosta");
+        List<Estilo> gosta = new ArrayList<>();
+        String[] gostaArray = mapDados.get("gosta").split(",");
+        List<Estilo> naoGosta = new ArrayList<>();
+        String[] naoGostaArray = mapDados.get("naoGosta").split(",");
+        Estilo estilo;
+        
+        for (int i = 0; i < gostaArray.length; i++) {
+        	estilo = new Estilo(gostaArray[i]);
+			gosta.add(estilo);
+		}
+        
+        for (int i = 0; i < naoGostaArray.length; i++) {
+        	estilo = new Estilo(naoGostaArray[i]);
+			naoGosta.add(estilo);
+		}
         
         try {
         	anunciante = new Anunciante(cidade, bairro, instrumentos, gosta, naoGosta, 
         		procuraBanda, facebook, email);
         	dao.persist(anunciante);
         } catch (Exception e) {
-        	e.printStackTrace();
+        	return badRequest(anuncie.render(e.getMessage().toString()));
         }
         
         anuncioCriado = new Anuncio(titulo, descricao, anunciante);

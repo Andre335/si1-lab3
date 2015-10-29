@@ -2,7 +2,6 @@
 
 
 import java.io.File;
-
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.Scanner;
 
 import models.Anunciante;
 import models.Anuncio;
+import models.Estilo;
 import models.dao.GenericDAO;
 import play.Application;
 import play.GlobalSettings;
@@ -32,25 +32,31 @@ public class Global extends GlobalSettings {
 				for (int i = 0; i < 10; i++) {
 					Anuncio anuncio = new Anuncio();
 					Anunciante anunciante = new Anunciante();
-
+					List<Estilo> gosta = new ArrayList<>();
+					List<Estilo> naoGosta = new ArrayList<>();
+					
 					if (i % 2 == 0) {
 						anuncio.setTitulo("Quero tocar numa banda de rock");
 						anuncio.setDescricao("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate. Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis dolor, in sagittis nisi.");
 						
 						anunciante.setCidade("Campina Grande");
-						anunciante.setBairro("Bateria");
+						anunciante.setBairro("Bodocongo");
 						anunciante.setEmail("andre335@gmail.com");
 						anunciante.setFacebook("facebook.com/andre335");
-						anunciante.setGosta("rock, mpb");
-						anunciante.setNaoGosta("swingueira, axe");
 						anunciante.setInstrumentos("bateria, violao");
 						anunciante.setProcuraBanda(true);
 						
+						gosta.add(new Estilo("Rock"));
+						gosta.add(new Estilo("Mpb"));
+						anunciante.setGosta(gosta);
+						
+						naoGosta.add(new Estilo("swingueira"));
+						naoGosta.add(new Estilo("axe"));
+						anunciante.setNaoGosta(naoGosta);
 						dao.persist(anunciante);
 						dao.flush();
 						
 						anuncio.setAnunciante(anunciante);
-						
 						dao.persist(anuncio);
 						dao.flush();
 					} else {
@@ -61,16 +67,20 @@ public class Global extends GlobalSettings {
 						anunciante.setBairro("Valentina");
 						anunciante.setEmail("andre335@gmail.com");
 						anunciante.setFacebook("facebook.com/andre335");
-						anunciante.setGosta("rock, mpb");
-						anunciante.setNaoGosta("swingueira, axe");
 						anunciante.setInstrumentos("bateria, violao");
 						anunciante.setProcuraBanda(false);
 						
+						gosta.add(new Estilo("Rock"));
+						gosta.add(new Estilo("Mpb"));
+						anunciante.setGosta(gosta);
+						
+						naoGosta.add(new Estilo("swingueira"));
+						naoGosta.add(new Estilo("axe"));
+						anunciante.setNaoGosta(naoGosta);
 						dao.persist(anunciante);
 						dao.flush();
 						
 						anuncio.setAnunciante(anunciante);
-						
 						dao.persist(anuncio);
 						dao.flush();
 					}

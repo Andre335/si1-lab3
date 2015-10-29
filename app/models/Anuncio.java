@@ -23,13 +23,13 @@ public class Anuncio {
 	@GeneratedValue
 	private long id;
 	
-	@Column
+	@Column(nullable = false)
     private String titulo;
 	
-	@Column
+	@Column(nullable = false)
     private String descricao;
 	
-	@ManyToOne
+	@OneToOne(orphanRemoval = true)
     private Anunciante anunciante;
 	
 	@Temporal(value = TemporalType.TIMESTAMP)
@@ -82,6 +82,24 @@ public class Anuncio {
 	public void setDate(Calendar date) {
 		this.date = date;
 	}
+	
+	public String getDateString() {
+		String dateString = "";
+		dateString += getDiaString() + "/" + getMesString() + "/" + getAnoString();
+		return dateString;
+	}
 
-
+	private String getDiaString() {
+		int dia = getDate().get(Calendar.DAY_OF_MONTH);
+		return "" + dia;
+	}
+	
+	private String getMesString() {
+		int mes = getDate().get(Calendar.MONTH) + 1;
+		return "" + mes;
+	}
+	private String getAnoString() {
+		int ano = getDate().get(Calendar.YEAR);
+		return "" + ano;
+	}
 }

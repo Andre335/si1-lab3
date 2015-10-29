@@ -11,6 +11,8 @@
         rel="stylesheet" type="text/css">
         <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css"
         rel="stylesheet" type="text/css">
+        
+        <title> Band Finder </title>
     </head>
     
     <body>
@@ -46,14 +48,13 @@
             </div>
         </div>
         <div class="cover">
-            <div class="cover-image"></div>
+            <div class="cover-image" style="background-image: url(routes.Assets.at('images/planodefundo.jpg'))"></div>
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <h1 class="text-danger">Band Finder</h1>
-                        <p class="text-success">Uma aplicação web que torna mais fácil a busca por outros colegas músicos.</p>
-                        <p
-                        class="text-success">Crie seus anúncios e logo, logo alguém entrará em contato com você.</p>
+                        <p class="text-success">Uma aplicacao web que torna mais facil a busca por outros colegas musicos.</p>
+                        <p class="text-success">Crie seus anuncios e logo, logo alguem entrara em contato com voce.</p>
                             <br>
                             <br>
                             <a class="btn btn-lg btn-primary" href="@routes.Application.anuncie()">Criar Anuncio<br></a>
@@ -61,51 +62,35 @@
                 </div>
             </div>
         </div>
-        <div class="bs-example" data-exaple-id="table-within-panel">
-	        @if(anuncios.size() > 0){
-		        <div id="table_content" class="panel panel-default">
-		        	<table class="table">
-		        		<thead>
-		        			<tr>
-		        				<th> Titulo </th>
-		        				<th> Cidade </th>
-		        				<th> Bairro </th>
-		        				<th> Email </th>
-		        				<th> Facebook </th>
-		        				<th> Procura Banda? </th>
-		        			</tr>
-		        		</thead>
-		        		<tbody>
-		        			@for(anuncio <- anuncios){
-		        				<tr>  
-		        					<td>@anuncio.getTitulo()</td>
-		        					<td>@anuncio.getAnunciante().getCidade()</td>
-		        					<td>@anuncio.getAnunciante().getBairro()</td>
-		        					<td>@anuncio.getAnunciante().getEmail()</td>
-		        					<td>@anuncio.getAnunciante().getFacebook()</td>
-		        					@if(anuncio.getAnunciante().isProcuraBanda()){
-		        						<td>Sim</td>
-		        					}else{
-		        						<td>Não</td>
-		        					}
-		        				</tr>
-		        			}
-		        		</tbody>
-		        	</table>
-		        </div>
-		    }
+        <div class="row-fluid marketing">
+        	<div class="col-sm-6">
+	        	@if(anuncios.size() > 0){
+	        		@for(anuncio <- anuncios.reverse){
+		        		<div class="row">
+		        			<div class="col-xs-12">
+			        			<h2 class="text-info">@anuncio.getTitulo()</h2>
+	                     		<p class="muted">@anuncio.getDescricao()</p>
+	                     		<p class="muted">Endereco: @anuncio.getAnunciante().getCidade(),
+	                     								   @anuncio.getAnunciante().getBairro()</p>
+	                     		<p class="muted">Estilos: @anuncio.getAnunciante().getNaoGostaString()</p>
+	                  			<p class="muted">Contato: @anuncio.getAnunciante().getEmail()</p>
+	                    	 	<p class="muted">Criado em @anuncio.getDateString()</p>
+		        			</div>
+		        		</div>
+		        	}
+		    	}
+		    </div>
 		</div>
         <div class="section" id="about">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="file:///C:/Users/Andre/Documents/SI1/si1-lab2/public/images/img-altofalante.jpg"
-                        class="img-responsive">
+                        <img src="public/images/img-altofalante.jpg" class="img-responsive">
                     </div>
                     <div class="col-md-6">
-                        <h1 class="text-primary">Crie Anúncios</h1>
+                        <h1 class="text-primary">Crie Anuncios</h1>
                         <p class="text-left">
-                            <b>Crie um anúncio completo, e espere seus colegas músicos responderem, para
+                            <b>Crie um anuncio completo, e espere seus colegas musicos responderem, para
                                 montar sua banda.</b>
                         </p>
                     </div>
@@ -116,16 +101,15 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <h1 class="text-primary">Busca por Anúncios Filtrada</h1>
+                        <h1 class="text-primary">Busca por Anuncios Filtrada</h1>
                         <h3></h3>
                         <p>
-                            <b>Filtre anúncios pelos estilos musicais ou instrumentos que você gosta
+                            <b>Filtre anuncios pelos estilos musicais ou instrumentos que voce gosta
                                 ou toca para ir direto aos que lhe interessam.</b>
                         </p>
                     </div>
                     <div class="col-md-6">
-                        <img src="file:///C:/Users/Andre/Documents/SI1/si1-lab2/public/images/img-bateria1.jpg"
-                        class="img-responsive">
+                        <img src="public/images/img-bateria1.jpg" class="img-responsive">
                     </div>
                 </div>
             </div>
@@ -139,22 +123,19 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="file:///C:/Users/Andre/Documents/SI1/si1-lab2/public/images/img-banda1.jpg"
-                        class="center-block img-responsive img-rounded">
+                        <img src="public/images/img-banda1.jpg" class="center-block img-responsive img-rounded">
                         <h3 class="text-center">Monte sua banda!</h3>
                         <p class="text-center">Monte sua banda rapidamente e divirta-se.</p>
                     </div>
                     <div class="col-md-4">
-                        <img src="file:///C:/Users/Andre/Documents/SI1/si1-lab2/public/images/img-contato.jpg"
-                        class="center-block img-responsive img-rounded">
+                        <img src="public/images/img-contato.jpg" class="center-block img-responsive img-rounded">
                         <h3 class="text-center">Deixe seu contato!</h3>
-                        <p class="text-center">Ao criar o anúncio deixe uma forma de contato, para que os interessados
-                            possam logo contactar você.</p>
+                        <p class="text-center">Ao criar o anuncio deixe uma forma de contato, para que os interessados
+                            possam logo contactar voce.</p>
                     </div>
                     <div class="col-md-4">
-                        <img src="file:///C:/Users/Andre/Documents/SI1/si1-lab2/public/images/img-check.png"
-                        class="center-block img-responsive img-rounded">
-                        <h3 class="text-center">Fácil de usar!</h3>
+                        <img src="public/images/img-check.png" class="center-block img-responsive img-rounded">
+                        <h3 class="text-center">Facil de usar!</h3>
                         <p class="text-center">Apenas criar o anuncio e esperar.</p>
                     </div>
                 </div>
@@ -164,7 +145,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h1>André Araújo, UFCG
+                        <h1>Andre Araujo, UFCG
                             <br>
                         </h1>
                     </div>
