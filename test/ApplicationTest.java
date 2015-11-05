@@ -3,21 +3,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.*;
+import javax.persistence.EntityManager;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import models.Anunciante;
+import models.EstiloGosta;
+import models.EstiloNaoGosta;
+import models.Instrumento;
+import models.dao.GenericDAO;
+
+import org.junit.*;
 import play.mvc.*;
 import play.test.*;
 import play.data.DynamicForm;
 import play.data.validation.ValidationError;
 import play.data.validation.Constraints.RequiredValidator;
+import play.db.jpa.JPA;
+import play.db.jpa.JPAPlugin;
 import play.i18n.Lang;
-import play.libs.F;
-import play.libs.F.*;
 import play.twirl.api.Content;
-
+import scala.Option;
 import static play.test.Helpers.*;
 import static org.junit.Assert.*;
+import static play.mvc.Http.Status.OK;
 
 
 /**
@@ -27,19 +36,46 @@ import static org.junit.Assert.*;
 *
 */
 public class ApplicationTest {
-
-    @Test
-    public void simpleCheck() {
-        int a = 1 + 1;
-        assertEquals(2, a);
-    }
-
-    @Test
-    public void renderTemplate() {
-        Content html = views.html.index.render("Your new application is ready.");
-        assertEquals("text/html", contentType(html));
-        assertTrue(contentAsString(html).contains("Your new application is ready."));
-    }
-
-
+	
+	private static FakeApplication bandFinder;
+	private EntityManager entityManager;
+	private static final GenericDAO dao = new GenericDAO();
+	
+	@BeforeClass
+	public static void startApp() {
+		bandFinder = Helpers.fakeApplication(new Global());
+		Helpers.start(bandFinder);
+	}
+	
+	@Before
+	public void inicializacao() {
+        Option<JPAPlugin> pluginJPA = bandFinder.getWrappedApplication().plugin(JPAPlugin.class);
+        entityManager = pluginJPA.get().em("default");
+        JPA.bindForCurrentThread(entityManager);
+        entityManager.getTransaction().begin();
+	}
+	
+//	@Test
+//	public void renderizarIndex() {
+//		Result resultado = callAction(controllers.Application.index());
+//		assertEquals(resultado, OK);
+//	}
+//	
+//	@Test
+//	public void renderizarAnunciar() {
+//		Result resultado = callAction(controllers.Application.anuncie());
+//		assertEquals(resultado, OK);
+//	}
+	
+	@After
+	public void close() {
+        entityManager.getTransaction().commit();
+        JPA.bindForCurrentThread(null);
+        entityManager.close();
+	}
+	
+	@AfterClass
+	public static void fechar() {
+		Helpers.stop(bandFinder);
+	}
 }

@@ -47,6 +47,32 @@
                 </div>
             </div>
         </div>
+        <div class="well">
+            <br/>
+            <div class="row-fluid">
+               <form class="form-grup"  action="@routes.Application.filtrar()" method="post">
+                  <div class="span10 offset2">
+                     <div class="input-append">
+                        <input class="span9" name="valuePesquisa" id="appendedInputButton" type="text" placeholder="Ex: bateria, rock ou luau">
+                        <button class="btn" type="submit">Pesquisar</button>
+                        <br>
+                        <br>
+                     </div>
+                  </div>
+                  <div class="span12">
+                     <label class="radio inline">
+                     	<input type="radio"  name="pesquisa" value="PalavraChave">Palavra-Chave
+                     </label>
+                     <label class="radio inline">
+                     	<input type="radio" name="pesquisa" value="Instrumento">Instrumento
+                     </label>
+                     <label class="radio inline">
+                     	<input type="radio" name="pesquisa" value="Estilo">Estilo Preferido
+                     </label>
+                  </div>
+               </form>
+            </div>
+         </div>
         <div class="cover">
             <div class="cover-image" style="background-image: url(routes.Assets.at('images/planodefundo.jpg'))"></div>
             <div class="container">
@@ -72,8 +98,11 @@
 	                     		<p class="muted">@anuncio.getDescricao()</p>
 	                     		<p class="muted">Endereco: @anuncio.getAnunciante().getCidade(),
 	                     								   @anuncio.getAnunciante().getBairro()</p>
-	                     		<p class="muted">Estilos: @anuncio.getAnunciante().getNaoGostaString()</p>
-	                  			<p class="muted">Contato: @anuncio.getAnunciante().getEmail()</p>
+	                     		<p class="muted">@anuncio.getAnunciante().getInstrumentosString()</p>
+	                     		<p class="muted">@anuncio.getAnunciante().getGostaString()</p>
+	                     		<p class="muted">@anuncio.getAnunciante().getNaoGostaString()</p>
+	                  			<p class="muted">Email: @anuncio.getAnunciante().getEmail()</p>
+	                  			<p class="muted">Facebook: @anuncio.getAnunciante().getFacebook()</p>
 	                    	 	<p class="muted">Criado em @anuncio.getDateString()</p>
 		        			</div>
 		        		</div>
@@ -84,9 +113,6 @@
         <div class="section" id="about">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6">
-                        <img src="public/images/img-altofalante.jpg" class="img-responsive">
-                    </div>
                     <div class="col-md-6">
                         <h1 class="text-primary">Crie Anuncios</h1>
                         <p class="text-left">
@@ -108,9 +134,6 @@
                                 ou toca para ir direto aos que lhe interessam.</b>
                         </p>
                     </div>
-                    <div class="col-md-6">
-                        <img src="public/images/img-bateria1.jpg" class="img-responsive">
-                    </div>
                 </div>
             </div>
         </div>
@@ -123,18 +146,15 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="public/images/img-banda1.jpg" class="center-block img-responsive img-rounded">
                         <h3 class="text-center">Monte sua banda!</h3>
                         <p class="text-center">Monte sua banda rapidamente e divirta-se.</p>
                     </div>
                     <div class="col-md-4">
-                        <img src="public/images/img-contato.jpg" class="center-block img-responsive img-rounded">
                         <h3 class="text-center">Deixe seu contato!</h3>
                         <p class="text-center">Ao criar o anuncio deixe uma forma de contato, para que os interessados
                             possam logo contactar voce.</p>
                     </div>
                     <div class="col-md-4">
-                        <img src="public/images/img-check.png" class="center-block img-responsive img-rounded">
                         <h3 class="text-center">Facil de usar!</h3>
                         <p class="text-center">Apenas criar o anuncio e esperar.</p>
                     </div>

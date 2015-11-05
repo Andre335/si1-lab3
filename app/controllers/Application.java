@@ -5,11 +5,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Query;
+
 import models.Anunciante;
 import models.Anuncio;
-import models.Estilo;
+import models.EstiloGosta;
+import models.EstiloNaoGosta;
+import models.Instrumento;
 import models.dao.GenericDAO;
 import play.*;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.mvc.*;
@@ -52,21 +57,31 @@ public class Application extends Controller {
         }
 
         // instrumentos e estilos
-        String instrumentos = mapDados.get("instrumentos");
-        List<Estilo> gosta = new ArrayList<>();
+        List<Instrumento> instrumentos = new ArrayList<>();
+        String[] instrumentosArray = mapDados.get("instrumentos").split(",");
+        Instrumento instrumento;
+        
+        List<EstiloGosta> gosta = new ArrayList<>();
         String[] gostaArray = mapDados.get("gosta").split(",");
-        List<Estilo> naoGosta = new ArrayList<>();
+        EstiloGosta estiloGosta;
+        
+        List<EstiloNaoGosta> naoGosta = new ArrayList<>();
         String[] naoGostaArray = mapDados.get("naoGosta").split(",");
-        Estilo estilo;
+        EstiloNaoGosta estiloNaoGosta;
         
         for (int i = 0; i < gostaArray.length; i++) {
-        	estilo = new Estilo(gostaArray[i]);
-			gosta.add(estilo);
+        	estiloGosta = new EstiloGosta(gostaArray[i]);
+			gosta.add(estiloGosta);
 		}
         
         for (int i = 0; i < naoGostaArray.length; i++) {
-        	estilo = new Estilo(naoGostaArray[i]);
-			naoGosta.add(estilo);
+        	estiloNaoGosta = new EstiloNaoGosta(naoGostaArray[i]);
+			naoGosta.add(estiloNaoGosta);
+		}
+        
+        for (int i = 0; i < instrumentosArray.length; i++) {
+			instrumento = new Instrumento(instrumentosArray[i]);
+			instrumentos.add(instrumento);
 		}
         
         try {
@@ -81,6 +96,50 @@ public class Application extends Controller {
         dao.persist(anuncioCriado);
         dao.flush();
         return ok(index.render(dao.findAllByClass(Anuncio.class)));
+    }
+    
+    @Transactional
+    public Result filtrar() {
+    	DynamicForm searchType = Form.form().bindFromRequest();
+    	
+    	if (searchType.get("pesquisa").equals("PalavraChave")) {
+    		Query consultaPalavraChave = dao.createQuery("FROM Anuncio a WHERE a.titulo LIKE :palavra OR a.descricao LIKE :palavra");
+			consultaPalavraChave.setParameter("palavra", "%" + searchType.get("valuePesquisa") + "%");
+			
+			return ok(index.render(consultaPalavraChave.getResultList()));
+    	} else if (searchType.get("pesquisa").equals("Instrumento")) {
+    		Query consultaInstrumentos = dao.createQuery("SELECT a FROM Anuncio a, Instrumento i WHERE i.nome = :instrumento");
+			consultaInstrumentos.setParameter("instrumento", searchType.get("valuePesquisa"));
+			
+			List<Anuncio> listAnuncio = new ArrayList<>();
+			for (Object anuncio : consultaInstrumentos.getResultList()) {
+				for (Instrumento instrumento : ((Anuncio) anuncio).getAnunciante().getInstrumentos()) {
+					if (searchType.get("valuePesquisa").toLowerCase().equals(instrumento.getNome().toLowerCase()) 
+							&& !listAnuncio.contains(((Anuncio) anuncio))) {
+						listAnuncio.add(((Anuncio) anuncio));
+					}
+				}
+			}
+			
+			return ok(index.render(listAnuncio));
+    	} else if (searchType.get("pesquisa").equals("Estilo")) {
+    		Query consultaInstrumentos = dao.createQuery("SELECT a FROM Anuncio a, EstiloGosta e WHERE e.nome = :estilo");
+			consultaInstrumentos.setParameter("estilo", searchType.get("valuePesquisa"));
+			
+			List<Anuncio> listAnuncio = new ArrayList<>();
+			for (Object anuncio : consultaInstrumentos.getResultList()) {
+				for (EstiloGosta estilo : ((Anuncio) anuncio).getAnunciante().getGosta()) {
+					if (searchType.get("valuePesquisa").toLowerCase().equals(estilo.getNome().toLowerCase()) 
+							&& !listAnuncio.contains(((Anuncio) anuncio))) {
+						listAnuncio.add(((Anuncio) anuncio));
+					}
+				}
+			}
+			
+			return ok(index.render(listAnuncio));
+    	}
+    	
+    	return ok(index.render(dao.findAllByClass(Anuncio.class)));
     }
 
 }

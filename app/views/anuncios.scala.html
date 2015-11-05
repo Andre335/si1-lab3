@@ -1,10 +1,15 @@
-@(titulo: String)
-<html>
+@(listaAnuncios : List[Anuncio])
+<!DOCTYPE html>
 	<head>
-		<h1> Anuncios </h1>
+		<title> Anuncios </title>
 	</head>
 	<body> 
-		 <h2>@titulo</h2>
-		 <p>blablabla</p>
+		 <div>
+		 	@for(anuncio <- listaAnuncios) {
+		 		<h2>@anuncio.getTitulo() </h2> 
+		 		<h3>@anuncio.getDate().getTime().toString()</h3>
+		 		<p>@anuncio.getDescricao()</p> <br>
+		 	}
+		 </div>
 	</body>
 </html>

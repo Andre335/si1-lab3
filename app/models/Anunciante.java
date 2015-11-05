@@ -25,14 +25,14 @@ public class Anunciante {
 	@Column(nullable = false)
 	private String bairro;
 	
-	@Column(nullable = false)
-	private String instrumentos;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Instrumento> instrumentos;
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Estilo> gosta;
+	private List<EstiloGosta> gosta;
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Estilo> naoGosta;
+	private List<EstiloNaoGosta> naoGosta;
 	
 	@Column(nullable = false)
 	private boolean procuraBanda;
@@ -44,34 +44,24 @@ public class Anunciante {
 	private String email;
 	
 	public Anunciante () { 
-		this.gosta = new ArrayList<Estilo>();
-		this.gosta = new ArrayList<Estilo>();
+		this.gosta = new ArrayList<EstiloGosta>();
+		this.naoGosta = new ArrayList<EstiloNaoGosta>();
 	}
 	
-	public Anunciante(String cidade, String bairro, String instrumentos, List<Estilo> gosta,
-			List<Estilo> naoGosta, boolean procuraBanda, String facebook, String email) throws Exception {
+	public Anunciante(String cidade, String bairro, List<Instrumento> instrumentos, List<EstiloGosta> gosta,
+			List<EstiloNaoGosta> naoGosta, boolean procuraBanda, String facebook, String email) throws Exception {
 		
 		if (isContatoEmpty(facebook) && isContatoEmpty(email)) 
 			throw new Exception ("Informe ao menos uma forma de contato!");
 		
 		this.cidade = cidade;
 		this.bairro = bairro;
-		this.instrumentos = instrumentos;
 		this.procuraBanda = procuraBanda;
 		
+		this.instrumentos = instrumentos.isEmpty() ? new ArrayList<>() : instrumentos;
 		this.gosta = gosta.isEmpty() ? new ArrayList<>() : gosta;
-//		if (gosta.isEmpty()) {
-//			this.gosta = new ArrayList<>();
-//		} else {
-//			this.gosta = gosta;
-//		}
-		
 		this.naoGosta = naoGosta.isEmpty() ? new ArrayList<>() : naoGosta;
-//		if (naoGosta.isEmpty()) {
-//			this.naoGosta = new ArrayList<>();
-//		} else {
-//			this.naoGosta = naoGosta;
-//		}
+
 		
 		if (isContatoEmpty(facebook)) {
 			setFacebook("Nao informado");
@@ -107,27 +97,27 @@ public class Anunciante {
 		this.bairro = bairro;
 	}
 
-	public String getInstrumentos() {
+	public List<Instrumento> getInstrumentos() {
 		return instrumentos;
 	}
 
-	public void setInstrumentos(String instrumentos) {
+	public void setInstrumentos(List<Instrumento> instrumentos) {
 		this.instrumentos = instrumentos;
 	}
 
-	public List<Estilo> getGosta() {
+	public List<EstiloGosta> getGosta() {
 		return gosta;
 	}
 
-	public void setGosta(List<Estilo> gosta) {
+	public void setGosta(List<EstiloGosta> gosta) {
 		this.gosta = gosta;
 	}
 
-	public List<Estilo> getNaoGosta() {
+	public List<EstiloNaoGosta> getNaoGosta() {
 		return naoGosta;
 	}
 
-	public void setNaoGosta(List<Estilo> naoGosta) {
+	public void setNaoGosta(List<EstiloNaoGosta> naoGosta) {
 		this.naoGosta = naoGosta;
 	}
 
@@ -164,19 +154,26 @@ public class Anunciante {
 	}
 	
 	public String getGostaString() {
-		String gostaS = "";
-		for (Estilo estilo : this.gosta) {
+		String gostaS = "Gosto de tocar: ";
+		for (EstiloGosta estilo : this.gosta) {
 			gostaS += estilo.getNome() + ", ";
 		}
 		return gostaS;
 	}
 	
 	public String getNaoGostaString() {
-		String naoGostaS = "";
-		for (Estilo estilo : this.gosta) {
+		String naoGostaS = "Nao me interessa: ";
+		for (EstiloNaoGosta estilo : this.naoGosta) {
 			naoGostaS += estilo.getNome() + ", ";
 		}
 		return naoGostaS;
 	}
 	
+	public String getInstrumentosString() {
+		String instrumentoS = "Sei tocar: ";
+		for (Instrumento instrumento : instrumentos) {
+			instrumentoS += instrumento.getNome() + ",";
+		}
+		return instrumentoS;
+	}
 }
