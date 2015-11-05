@@ -20,7 +20,6 @@ import play.data.DynamicForm;
 import play.data.validation.ValidationError;
 import play.data.validation.Constraints.RequiredValidator;
 import play.db.jpa.JPA;
-import play.db.jpa.JPAPlugin;
 import play.i18n.Lang;
 import play.twirl.api.Content;
 import scala.Option;
@@ -41,19 +40,19 @@ public class ApplicationTest {
 	private EntityManager entityManager;
 	private static final GenericDAO dao = new GenericDAO();
 	
-	@BeforeClass
-	public static void startApp() {
-		bandFinder = Helpers.fakeApplication(new Global());
-		Helpers.start(bandFinder);
-	}
-	
-	@Before
-	public void inicializacao() {
-        Option<JPAPlugin> pluginJPA = bandFinder.getWrappedApplication().plugin(JPAPlugin.class);
-        entityManager = pluginJPA.get().em("default");
-        JPA.bindForCurrentThread(entityManager);
-        entityManager.getTransaction().begin();
-	}
+//	@BeforeClass
+//	public static void startApp() {
+//		bandFinder = Helpers.fakeApplication(new Global());
+//		Helpers.start(bandFinder);
+//	}
+//	
+//	@Before
+//	public void inicializacao() {
+//        //Option<JPAPlugin> pluginJPA = bandFinder.getWrappedApplication().plugin(JPAPlugin.class);
+//        //entityManager = pluginJPA.get().em("default");
+//        //JPA.bindForCurrentThread(entityManager);
+//        //entityManager.getTransaction().begin();
+//	}
 	
 //	@Test
 //	public void renderizarIndex() {
@@ -67,15 +66,15 @@ public class ApplicationTest {
 //		assertEquals(resultado, OK);
 //	}
 	
-	@After
-	public void close() {
-        entityManager.getTransaction().commit();
-        JPA.bindForCurrentThread(null);
-        entityManager.close();
-	}
-	
-	@AfterClass
-	public static void fechar() {
-		Helpers.stop(bandFinder);
-	}
+//	@After
+//	public void close() {
+//        entityManager.getTransaction().commit();
+//        //JPA.bindForCurrentThread(null);
+//        entityManager.close();
+//	}
+//	
+//	@AfterClass
+//	public static void fechar() {
+//		Helpers.stop(bandFinder);
+//	}
 }
